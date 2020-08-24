@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@vue/apollo-composable": "^4.0.0-alpha.10",
     "@vue/composition-api": "^1.0.0-beta.10",
     "core-js": "^3.6.5",
     "graphql": "^15.3.0",

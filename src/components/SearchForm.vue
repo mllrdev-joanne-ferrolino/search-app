@@ -1,15 +1,29 @@
 <template>
   <div>
-    <form>
-      <input type="text" />
+    <form @submit.prevent="handleSubmit">
+      <input type="text" v-model="textQuery" />
       <input type="submit" value="search" />
-      <p>{{ search }}</p>
     </form>
   </div>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+import { defineComponent, ref } from "@vue/composition-api";
+export default defineComponent({
+  name: "search-form",
+  props: {
+    query: {
+      type: String
+    }
+  },
+  setup(props, { emit }) {
+    const textQuery = ref("");
+    function handleSubmit(){
+      emit("query", textQuery);
+    }
+    return { textQuery, handleSubmit };
+  },
+});
 </script>
 
 <style lang="scss" scoped></style>

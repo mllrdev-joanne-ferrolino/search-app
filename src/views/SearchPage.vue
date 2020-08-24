@@ -1,40 +1,47 @@
 <template>
   <div>
-    <form>
-      <input type="text" />
-      <input type="submit" value="search" />
-      <div v-for="node in search.nodes" :key="node.id">
-        <div>{{ node.name }}</div>
-        <div v-for="repository in node.repositories" :key="repository.id">
-          <div v-for="node in repository.nodes" :key="node.id">
-            {{ node.name }}
-          </div>
+    <search-form @query="searchUser"></search-form>
+    <div v-if="result">
+      <div v-if="error">Error: {{ error.message }}</div>
+      <div v-for="searchResult in searchResults" :key="searchResult.id">
+        <p>{{ searchResult.name }}</p>
+        Repositories:
+        <div
+          v-for="repository in searchResult.repositories.nodes"
+          :key="repository.id"
+        > {{ repository.name }}
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "@vue/composition-api";
+import { defineComponent, ref } from "@vue/composition-api";
+import { useQuery, useResult } from "@vue/apollo-composable";
 import { Sample } from "../queries/sample";
-import { User } from "@/generated/graphql";
+import SearchForm from "@/components/SearchForm.vue";
+import gql from "graphql-tag";
 export default defineComponent({
   name: "search-page",
-  apollo: {
-    search: {
-      query: Sample,
-      variables() {
-        return {
-          query: "Joanne Ferrolino",
-          type: "USER"
-        };
-      },
-    },
-  },
+  components: { SearchForm },
   setup() {
-    const search = reactive([]);
-    return { search };
+    const textQuery = ref("");
+    const { result, error, variables } = useQuery(Sample, {
+      query: textQuery.value,
+      type: "USER",
+    });
+    const searchResults = useResult(result, null, (data) => data.search.nodes);
+    function searchUser(searchQuery: string) {
+      variables.value = { query: searchQuery, type: "USER" };
+    }
+    return {
+      result,
+      searchResults,
+      textQuery,
+      searchUser,
+      error,
+    };
   },
 });
 </script>
