@@ -1,0 +1,11 @@
+ query GetRepositories($login: String!){
+  user(login: $login){
+    name
+    repositories(first: 5){
+      nodes{
+        name
+        description
+      }
+    }
+  }
+}

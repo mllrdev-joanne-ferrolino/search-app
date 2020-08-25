@@ -23,6 +23,9 @@
   "devDependencies": {
     "@graphql-codegen/cli": "1.17.8",
     "@graphql-codegen/typescript": "1.17.8",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-resolvers": "1.17.8",
+    "@graphql-codegen/typescript-vue-apollo": "^1.17.9",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -41,7 +44,6 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
     "vue-cli-plugin-apollo": "~0.22.2",
-    "vue-template-compiler": "^2.6.11",
-    "@graphql-codegen/typescript-resolvers": "1.17.8"
+    "vue-template-compiler": "^2.6.11"
   }
 }

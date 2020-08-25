@@ -1,0 +1,10 @@
+ query GetUsers($query: String!, $type: SearchType!) {
+    search(query: $query, type: $type, first: 5) {
+      nodes {
+        ... on User {
+          name
+          login
+        }
+      }
+    }
+  }

@@ -5,6 +5,7 @@ export const Sample = gql`
       nodes {
         ... on User {
           name
+          login
           repositories(first: 5, privacy: PUBLIC) {
             nodes {
               name

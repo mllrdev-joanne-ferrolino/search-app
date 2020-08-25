@@ -1,5 +1,9 @@
+import gql from 'graphql-tag';
+import * as VueApolloComposable from '@vue/apollo-composable';
+import * as VueCompositionApi from '@vue/composition-api';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type ReactiveFunction<TParam> = () => TParam;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -19101,3 +19105,110 @@ export type ViewerHovercardContext = HovercardContext & {
   viewer: User;
 };
 
+
+export type GetRepositoriesQueryVariables = Exact<{
+  login: Scalars['String'];
+}>;
+
+
+export type GetRepositoriesQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'name'>
+    & { repositories: (
+      { __typename?: 'RepositoryConnection' }
+      & { nodes?: Maybe<Array<Maybe<(
+        { __typename?: 'Repository' }
+        & Pick<Repository, 'name' | 'description'>
+      )>>> }
+    ) }
+  )> }
+);
+
+export type GetUsersQueryVariables = Exact<{
+  query: Scalars['String'];
+  type: SearchType;
+}>;
+
+
+export type GetUsersQuery = (
+  { __typename?: 'Query' }
+  & { search: (
+    { __typename?: 'SearchResultItemConnection' }
+    & { nodes?: Maybe<Array<Maybe<{ __typename?: 'App' } | { __typename?: 'Issue' } | { __typename?: 'MarketplaceListing' } | { __typename?: 'Organization' } | { __typename?: 'PullRequest' } | { __typename?: 'Repository' } | (
+      { __typename?: 'User' }
+      & Pick<User, 'name' | 'login'>
+    )>>> }
+  ) }
+);
+
+
+export const GetRepositoriesDocument = gql`
+    query GetRepositories($login: String!) {
+  user(login: $login) {
+    name
+    repositories(first: 5) {
+      nodes {
+        name
+        description
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRepositoriesQuery__
+ *
+ * To run a query within a Vue component, call `useGetRepositoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRepositoriesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetRepositoriesQuery(
+ *   {
+ *      login: // value for 'login'
+ *   }
+ * );
+ */
+export function useGetRepositoriesQuery(variables: GetRepositoriesQueryVariables | VueCompositionApi.Ref<GetRepositoriesQueryVariables> | ReactiveFunction<GetRepositoriesQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetRepositoriesQuery, GetRepositoriesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetRepositoriesQuery, GetRepositoriesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetRepositoriesQuery, GetRepositoriesQueryVariables>> = {}) {
+            return VueApolloComposable.useQuery<GetRepositoriesQuery, GetRepositoriesQueryVariables>(GetRepositoriesDocument, variables, options);
+          }
+export type GetRepositoriesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetRepositoriesQuery, GetRepositoriesQueryVariables>;
+export const GetUsersDocument = gql`
+    query GetUsers($query: String!, $type: SearchType!) {
+  search(query: $query, type: $type, first: 5) {
+    nodes {
+      ... on User {
+        name
+        login
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a Vue component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetUsersQuery(
+ *   {
+ *      query: // value for 'query'
+ *      type: // value for 'type'
+ *   }
+ * );
+ */
+export function useGetUsersQuery(variables: GetUsersQueryVariables | VueCompositionApi.Ref<GetUsersQueryVariables> | ReactiveFunction<GetUsersQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetUsersQuery, GetUsersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetUsersQuery, GetUsersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetUsersQuery, GetUsersQueryVariables>> = {}) {
+            return VueApolloComposable.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, variables, options);
+          }
+export type GetUsersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetUsersQuery, GetUsersQueryVariables>;

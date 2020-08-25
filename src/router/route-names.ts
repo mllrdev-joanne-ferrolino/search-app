@@ -1,7 +1,8 @@
 import Vue from "vue";
 
 export enum RouteNames {
-  SEARCH = "Search"
+  SEARCH = "Search",
+  USER = "User"
 }
 
 Vue.prototype.$routeNames = RouteNames;

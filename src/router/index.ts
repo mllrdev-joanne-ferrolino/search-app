@@ -15,6 +15,12 @@ const routes: Array<RouteConfig> = [
     path: "/search",
     name: RouteNames.SEARCH,
     component: loadView("SearchPage")
+  },
+  {
+    path: "/user/:name",
+    name: RouteNames.USER,
+    component: loadView("UserPage"),
+    props: true
   }
 ];
 

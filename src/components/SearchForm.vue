@@ -19,7 +19,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const textQuery = ref("");
     function handleSubmit(){
-      emit("query", textQuery);
+      emit("query", textQuery.value);
     }
     return { textQuery, handleSubmit };
   },

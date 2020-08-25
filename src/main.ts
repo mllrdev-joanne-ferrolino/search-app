@@ -4,7 +4,8 @@ import router from "./router";
 
 import { provide } from "@vue/composition-api";
 import { DefaultApolloClient } from '@vue/apollo-composable';
-import { apolloClient } from "./plugins/apollo"
+import { apolloClient } from "@/plugins/apollo"
+import "@/plugins/composition-api";
 
 Vue.config.productionTip = false;
 

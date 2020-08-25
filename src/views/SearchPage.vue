@@ -1,46 +1,39 @@
 <template>
   <div>
     <search-form @query="searchUser"></search-form>
-    <div v-if="result">
-      <div v-if="error">Error: {{ error.message }}</div>
-      <div v-for="searchResult in searchResults" :key="searchResult.id">
-        <p>{{ searchResult.name }}</p>
-        Repositories:
-        <div
-          v-for="repository in searchResult.repositories.nodes"
-          :key="repository.id"
-        > {{ repository.name }}
-        </div>
-      </div>
-    </div>
+    <search-item
+      v-for="searchResult in searchResults"
+      :key="searchResult.id"
+      :searchResult="searchResult"
+    ></search-item>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "@vue/composition-api";
-import { useQuery, useResult } from "@vue/apollo-composable";
-import { Sample } from "../queries/sample";
+import { useResult } from "@vue/apollo-composable";
+import { useGetUsersQuery, SearchType } from "@/generated/graphql";
+import { useStore } from "@/composables/useStore";
 import SearchForm from "@/components/SearchForm.vue";
-import gql from "graphql-tag";
+import SearchItem from "@/components/SearchItem.vue";
 export default defineComponent({
   name: "search-page",
-  components: { SearchForm },
+  components: { SearchForm, SearchItem },
   setup() {
     const textQuery = ref("");
-    const { result, error, variables } = useQuery(Sample, {
+    const { storeSearchResults } = useStore();
+    const { result, variables } = useGetUsersQuery({
       query: textQuery.value,
-      type: "USER",
+      type: SearchType.User,
     });
     const searchResults = useResult(result, null, (data) => data.search.nodes);
     function searchUser(searchQuery: string) {
-      variables.value = { query: searchQuery, type: "USER" };
+      variables.value = { query: searchQuery, type: SearchType.User };
     }
     return {
-      result,
       searchResults,
-      textQuery,
       searchUser,
-      error,
+      storeSearchResults,
     };
   },
 });
