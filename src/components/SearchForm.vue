@@ -1,8 +1,8 @@
 <template>
   <div>
     <form @submit.prevent="handleSubmit">
-      <input type="text" v-model="textQuery" />
-      <input type="submit" value="search" />
+      <input class="form-control" type="text" v-model="textQuery" />
+      <input class="btn btn-primary" type="submit" value="search" />
     </form>
   </div>
 </template>
@@ -13,12 +13,12 @@ export default defineComponent({
   name: "search-form",
   props: {
     query: {
-      type: String
-    }
+      type: String,
+    },
   },
   setup(props, { emit }) {
     const textQuery = ref("");
-    function handleSubmit(){
+    function handleSubmit() {
       emit("query", textQuery.value);
     }
     return { textQuery, handleSubmit };
@@ -26,4 +26,14 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+form {
+  display: flex;
+  input {
+    margin: auto;
+  }
+  .form-control {
+    width: 80%;
+  }
+}
+</style>

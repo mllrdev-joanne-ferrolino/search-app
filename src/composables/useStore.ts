@@ -9,12 +9,16 @@ export function useStore() {
 
   function getSearchResults(textQuery: string) {
     
-    const { result } = useGetUsersQuery({
-      query: textQuery,
-      type: SearchType.User,
-    });
-    console.log(result.value);
-    storeSearchResults.push(result.value);
+    // const { result } = useGetUsersQuery({
+    //   query: textQuery,
+    //   type: SearchType.User,
+    //   limit: 1
+    // });
+    // console.log(result.value);
+    // storeSearchResults.push(result.value);
   }
-  return { getSearchResults, storeSearchResults };
+  return { 
+    // getSearchResults, 
+    storeSearchResults 
+  };
 }

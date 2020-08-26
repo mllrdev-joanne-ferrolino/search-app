@@ -1,10 +1,14 @@
- query GetRepositories($login: String!){
+ query GetRepositories($login: String!, $after: String){
   user(login: $login){
     name
-    repositories(first: 5){
+    repositories(first: 5, after: $after){
       nodes{
         name
         description
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }

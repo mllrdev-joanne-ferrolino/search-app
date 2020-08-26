@@ -1,10 +1,16 @@
- query GetUsers($query: String!, $type: SearchType!) {
-    search(query: $query, type: $type, first: 5) {
-      nodes {
-        ... on User {
-          name
-          login
-        }
+query GetUsers($query: String!, $type: SearchType!, $limit: Int!, $cursor: String) {
+  search(query: $query, type: $type, first: $limit, after: $cursor) {
+    nodes {
+      ... on User {
+        name
+        login
       }
     }
+    pageInfo {
+      endCursor
+      startCursor
+      hasNextPage
+      hasPreviousPage
+    }
   }
+}

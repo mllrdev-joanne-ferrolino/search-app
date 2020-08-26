@@ -19108,6 +19108,7 @@ export type ViewerHovercardContext = HovercardContext & {
 
 export type GetRepositoriesQueryVariables = Exact<{
   login: Scalars['String'];
+  after?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -19121,7 +19122,10 @@ export type GetRepositoriesQuery = (
       & { nodes?: Maybe<Array<Maybe<(
         { __typename?: 'Repository' }
         & Pick<Repository, 'name' | 'description'>
-      )>>> }
+      )>>>, pageInfo: (
+        { __typename?: 'PageInfo' }
+        & Pick<PageInfo, 'endCursor' | 'hasNextPage'>
+      ) }
     ) }
   )> }
 );
@@ -19129,6 +19133,8 @@ export type GetRepositoriesQuery = (
 export type GetUsersQueryVariables = Exact<{
   query: Scalars['String'];
   type: SearchType;
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -19139,19 +19145,26 @@ export type GetUsersQuery = (
     & { nodes?: Maybe<Array<Maybe<{ __typename?: 'App' } | { __typename?: 'Issue' } | { __typename?: 'MarketplaceListing' } | { __typename?: 'Organization' } | { __typename?: 'PullRequest' } | { __typename?: 'Repository' } | (
       { __typename?: 'User' }
       & Pick<User, 'name' | 'login'>
-    )>>> }
+    )>>>, pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'endCursor' | 'startCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ) }
   ) }
 );
 
 
 export const GetRepositoriesDocument = gql`
-    query GetRepositories($login: String!) {
+    query GetRepositories($login: String!, $after: String) {
   user(login: $login) {
     name
-    repositories(first: 5) {
+    repositories(first: 5, after: $after) {
       nodes {
         name
         description
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
@@ -19171,6 +19184,7 @@ export const GetRepositoriesDocument = gql`
  * const { result, loading, error } = useGetRepositoriesQuery(
  *   {
  *      login: // value for 'login'
+ *      after: // value for 'after'
  *   }
  * );
  */
@@ -19179,13 +19193,19 @@ export function useGetRepositoriesQuery(variables: GetRepositoriesQueryVariables
           }
 export type GetRepositoriesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetRepositoriesQuery, GetRepositoriesQueryVariables>;
 export const GetUsersDocument = gql`
-    query GetUsers($query: String!, $type: SearchType!) {
-  search(query: $query, type: $type, first: 5) {
+    query GetUsers($query: String!, $type: SearchType!, $limit: Int!, $cursor: String) {
+  search(query: $query, type: $type, first: $limit, after: $cursor) {
     nodes {
       ... on User {
         name
         login
       }
+    }
+    pageInfo {
+      endCursor
+      startCursor
+      hasNextPage
+      hasPreviousPage
     }
   }
 }
@@ -19205,6 +19225,8 @@ export const GetUsersDocument = gql`
  *   {
  *      query: // value for 'query'
  *      type: // value for 'type'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   }
  * );
  */
