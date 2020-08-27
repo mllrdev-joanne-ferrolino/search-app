@@ -19133,7 +19133,6 @@ export type GetRepositoriesQuery = (
 export type GetUsersQueryVariables = Exact<{
   query: Scalars['String'];
   type: SearchType;
-  limit: Scalars['Int'];
   cursor?: Maybe<Scalars['String']>;
 }>;
 
@@ -19142,12 +19141,13 @@ export type GetUsersQuery = (
   { __typename?: 'Query' }
   & { search: (
     { __typename?: 'SearchResultItemConnection' }
+    & Pick<SearchResultItemConnection, 'userCount'>
     & { nodes?: Maybe<Array<Maybe<{ __typename?: 'App' } | { __typename?: 'Issue' } | { __typename?: 'MarketplaceListing' } | { __typename?: 'Organization' } | { __typename?: 'PullRequest' } | { __typename?: 'Repository' } | (
       { __typename?: 'User' }
-      & Pick<User, 'name' | 'login'>
+      & Pick<User, 'name' | 'login' | 'email' | 'bio'>
     )>>>, pageInfo: (
       { __typename?: 'PageInfo' }
-      & Pick<PageInfo, 'endCursor' | 'startCursor' | 'hasNextPage' | 'hasPreviousPage'>
+      & Pick<PageInfo, 'endCursor' | 'hasNextPage'>
     ) }
   ) }
 );
@@ -19193,20 +19193,21 @@ export function useGetRepositoriesQuery(variables: GetRepositoriesQueryVariables
           }
 export type GetRepositoriesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetRepositoriesQuery, GetRepositoriesQueryVariables>;
 export const GetUsersDocument = gql`
-    query GetUsers($query: String!, $type: SearchType!, $limit: Int!, $cursor: String) {
-  search(query: $query, type: $type, first: $limit, after: $cursor) {
+    query GetUsers($query: String!, $type: SearchType!, $cursor: String) {
+  search(query: $query, type: $type, first: 10, after: $cursor) {
     nodes {
       ... on User {
         name
         login
+        email
+        bio
       }
     }
     pageInfo {
       endCursor
-      startCursor
       hasNextPage
-      hasPreviousPage
     }
+    userCount
   }
 }
     `;
@@ -19225,7 +19226,6 @@ export const GetUsersDocument = gql`
  *   {
  *      query: // value for 'query'
  *      type: // value for 'type'
- *      limit: // value for 'limit'
  *      cursor: // value for 'cursor'
  *   }
  * );

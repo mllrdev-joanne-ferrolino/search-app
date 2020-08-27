@@ -1,24 +1,19 @@
-import { GetUsersQuery } from "./../generated/graphql";
-import { reactive } from "@vue/composition-api";
-import { useGetUsersQuery, SearchType } from "@/generated/graphql";
+import { reactive, ref } from "@vue/composition-api";
 export const Store = {
-  searchResults: [] as GetUsersQuery[],
+  searchQueries: [] as string[],
+  searchQuery: ""
 };
 export function useStore() {
-  const storeSearchResults = reactive<GetUsersQuery[]>(Store.searchResults);
+  const storeSearchQueries = reactive<string[]>(Store.searchQueries);
+  const searchQuery = ref(Store.searchQuery);
 
-  function getSearchResults(textQuery: string) {
-    
-    // const { result } = useGetUsersQuery({
-    //   query: textQuery,
-    //   type: SearchType.User,
-    //   limit: 1
-    // });
-    // console.log(result.value);
-    // storeSearchResults.push(result.value);
+  function addSearchQueries(textQuery: string) {
+    storeSearchQueries.push(textQuery);
   }
+
   return { 
-    // getSearchResults, 
-    storeSearchResults 
+    addSearchQueries,
+    searchQuery,
+    storeSearchQueries
   };
 }

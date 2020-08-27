@@ -1,13 +1,23 @@
 <template>
-  <div>
+  <div class="container">
     <router-link v-slot="{ navigate }" :to="goToSearchPage">
-      <div @click="navigate">Back</div>
+      <button class="btn btn-outline-primary" @click="navigate">Back</button>
     </router-link>
-    <user-repositories
-      :user="user"
-      :repositories="repositories"
-    ></user-repositories>
-    <button v-show="hasNextPage" class="btn btn-primary">Load more</button>
+    <div v-if="result">
+      <user-repositories
+        v-show="repositories"
+        :user="username"
+        :repositories="repositories"
+      ></user-repositories>
+    </div>
+
+    <button
+      v-show="repositories && hasNextPage"
+      class="btn btn-primary"
+      @click="loadMore"
+    >
+      Load more
+    </button>
   </div>
 </template>
 
@@ -15,7 +25,7 @@
 import { defineComponent, computed } from "@vue/composition-api";
 import UserRepositories from "@/components/UserRepositories.vue";
 import { useResult } from "@vue/apollo-composable";
-import { User, useGetRepositoriesQuery } from "@/generated/graphql";
+import { useGetRepositoriesQuery } from "@/generated/graphql";
 export default defineComponent({
   name: "user-page",
   components: {
@@ -39,32 +49,51 @@ export default defineComponent({
       null,
       (data) => data.user?.repositories.nodes
     );
-    const user = useResult(result, null, (data) => data.user?.name);
+    const username = useResult(result, null, (data) => data.user?.name);
     function loadMore() {
-      // fetchMore({
-      //   variables: {
-      //     after: result.value.user?.repositories.pageInfo.endCursor,
-      //   },
-      //   updateQuery: (previousResult, { fetchMoreResult }) => {
-      //     if (!fetchMoreResult) return previousResult;
-      //     return {
-      //       repositories: {
-      //         nodes: [
-      //           ...previousResult.user?.repositories.nodes,
-      //           ...fetchMoreResult.user?.repositories.nodes
-      //         ],
-      //       },
-      //     };
-      //   },
-      // });
+      fetchMore({
+        variables: {
+          after: result.value.user?.repositories.pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return previousResult;
+          return {
+            user: {
+              __typename: "User",
+              name: fetchMoreResult.user?.name,
+              repositories: {
+                __typename: "RepositoryConnection",
+                nodes: [
+                  ...previousResult.user?.repositories?.nodes!,
+                  ...fetchMoreResult.user?.repositories?.nodes!,
+                ],
+                pageInfo: fetchMoreResult.user?.repositories?.pageInfo!,
+              },
+            },
+          };
+        },
+      });
     }
+
     const hasNextPage = computed(
       () => result.value.user?.repositories.pageInfo.hasNextPage
     );
 
-    return { repositories, user, goToSearchPage, hasNextPage };
+    return {
+      repositories,
+      username,
+      goToSearchPage,
+      hasNextPage,
+      loadMore,
+      result,
+    };
   },
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  font-family: sans-serif;
+  width: 80%;
+}
+</style>
