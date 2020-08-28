@@ -37,8 +37,7 @@ export default defineComponent({
     const searchResults = useResult(result, null, (data) => data.search.nodes);
     const formattedUserCount = computed(
       () =>
-        `${useResult(result, null, (data) => data.search.userCount).value} users
-        `
+        `${useResult(result, null, (data) => data.search.userCount).value} users`
     );
 
     onMounted(() => {
