@@ -1,12 +1,10 @@
 <template>
   <div v-if="searchResult" class="item">
     <router-link v-slot="{ navigate }" :to="goToUserPage">
-      <div @click="navigate">
-        <p>
-          <span class="name">{{ searchResult.name }}</span> -
-          {{ searchResult.login }}
-        </p>
-        <p class="bio">{{ searchResult.bio }}</p>
+      <div class="info" @click="navigate">
+        <span class="name">{{ searchResult.name }}</span>
+        <span class="login">{{ searchResult.login }}</span>
+        <div class="bio">{{ searchResult.bio }}</div>
       </div>
     </router-link>
   </div>
@@ -34,20 +32,32 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .item {
-  display: flex;
+  display: contents;
   width: 80%;
   margin: 10px;
   text-align: left;
   padding: 5px;
-  border-radius: 10px;
+  span {
+    margin: 5px;
+  }
+
+  div {
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .info {
+    border: 2px solid rgb(213, 214, 216);
+    margin-bottom: 5px;
+  }
   .name {
     font-weight: bold;
+    color: rgb(90, 90, 240);
   }
   .bio {
     font-size: 14px;
   }
 }
 div:hover {
-    background-color: rgb(213, 214, 216);
-  }
+  background-color: rgb(213, 214, 216);
+}
 </style>

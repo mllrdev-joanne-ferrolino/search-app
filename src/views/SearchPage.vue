@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <search-form :query="searchQuery" @query="searchUser"></search-form>
-    <div v-show="result" class="user-count">{{ userCount }}</div>
+    <search-form  @query="searchUser"></search-form>
+    <div v-show="result" class="user-count">{{ formattedUserCount }}</div>
     <search-item
       v-show="searchResults"
       v-for="searchResult in searchResults"
@@ -35,10 +35,12 @@ export default defineComponent({
       type: SearchType.User,
     });
     const searchResults = useResult(result, null, (data) => data.search.nodes);
-    const userCount = computed(
+    const formattedUserCount = computed(
       () =>
-        `${useResult(result, null, (data) => data.search.userCount).value} users`
+        `${useResult(result, null, (data) => data.search.userCount).value} users
+        `
     );
+
     onMounted(() => {
       if (storeSearchQueries) {
         searchQuery.value = storeSearchQueries[storeSearchQueries.length - 1];
@@ -87,7 +89,7 @@ export default defineComponent({
       hasNextPage,
       result,
       searchQuery,
-      userCount,
+      formattedUserCount,
     };
   },
 });

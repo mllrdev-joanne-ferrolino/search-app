@@ -13,7 +13,7 @@
 
     <button
       v-show="repositories && hasNextPage"
-      class="btn btn-primary"
+      class="btn btn-outline-primary"
       @click="loadMore"
     >
       Load more
@@ -49,7 +49,7 @@ export default defineComponent({
       null,
       (data) => data.user?.repositories.nodes
     );
-    const username = useResult(result, null, (data) => data.user?.name);
+    const username = useResult(result, null, (data) => data.user?.name) ?? "";
     function loadMore() {
       fetchMore({
         variables: {
@@ -67,7 +67,7 @@ export default defineComponent({
                   ...previousResult.user?.repositories?.nodes!,
                   ...fetchMoreResult.user?.repositories?.nodes!,
                 ],
-                pageInfo: fetchMoreResult.user?.repositories?.pageInfo!,
+                pageInfo: fetchMoreResult.user?.repositories.pageInfo!,
               },
             },
           };
