@@ -6,7 +6,7 @@
     <div v-if="result">
       <user-repositories
         v-show="repositories"
-        :user="username"
+        :user="username ? username : ''"
         :repositories="repositories"
       ></user-repositories>
     </div>
