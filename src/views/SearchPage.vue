@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <search-form  @query="searchUser"></search-form>
+    <search-form @query="searchUser"></search-form>
     <div v-show="result" class="user-count">{{ formattedUserCount }}</div>
     <search-item
       v-show="searchResults"
@@ -15,6 +15,7 @@
     >
       Load more...
     </button>
+    <div v-if="loading">Loading...</div>
   </div>
 </template>
 
@@ -30,14 +31,16 @@ export default defineComponent({
   components: { SearchForm, SearchItem },
   setup() {
     const { searchQuery, addSearchQueries, storeSearchQueries } = useStore();
-    const { result, variables, fetchMore } = useGetUsersQuery({
+    const { result, variables, fetchMore, loading } = useGetUsersQuery({
       query: searchQuery.value,
       type: SearchType.User,
     });
     const searchResults = useResult(result, null, (data) => data.search.nodes);
     const formattedUserCount = computed(
       () =>
-        `${useResult(result, null, (data) => data.search.userCount).value} users`
+        `${
+          useResult(result, null, (data) => data.search.userCount).value
+        } users`
     );
 
     onMounted(() => {
@@ -89,6 +92,7 @@ export default defineComponent({
       result,
       searchQuery,
       formattedUserCount,
+      loading,
     };
   },
 });

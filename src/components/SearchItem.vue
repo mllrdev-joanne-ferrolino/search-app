@@ -1,6 +1,10 @@
 <template>
   <div v-if="searchResult" class="item">
-    <router-link v-slot="{ navigate }" :to="goToUserPage">
+    <router-link
+      v-if="searchResult.login"
+      v-slot="{ navigate }"
+      :to="goToUserPage"
+    >
       <div class="info" @click="navigate">
         <span class="name">{{ searchResult.name }}</span>
         <span class="login">{{ searchResult.login }}</span>

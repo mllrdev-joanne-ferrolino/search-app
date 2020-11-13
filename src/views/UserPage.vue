@@ -18,6 +18,7 @@
     >
       Load more
     </button>
+    <div v-if="loading">Loading...</div>
   </div>
 </template>
 
@@ -41,7 +42,7 @@ export default defineComponent({
     const goToSearchPage = computed(() => ({
       name: root.$routeNames.SEARCH,
     }));
-    const { result, fetchMore } = useGetRepositoriesQuery({
+    const { result, fetchMore, loading } = useGetRepositoriesQuery({
       login: props.name,
     });
     const repositories = useResult(
@@ -86,6 +87,7 @@ export default defineComponent({
       hasNextPage,
       loadMore,
       result,
+      loading,
     };
   },
 });
